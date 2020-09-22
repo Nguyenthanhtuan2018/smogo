@@ -4,15 +4,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.springmongodb.smogo.master.entity.Employee;
 import com.springmongodb.smogo.master.service.EmployeeRepository;
 import com.springmongodb.smogo.master.service.EmployeeRepositoryCustom;
 
-@Controller
+@RestController
 public class MainController {
 
     private static final String[] NAMES = { "Tom", "Jerry", "Donald" };
@@ -37,8 +39,8 @@ public class MainController {
     }
 
     @ResponseBody
-    @RequestMapping("/testInsert")
-    public String testInsert() {
+    @PostMapping("/testInsert")
+    public Employee testInsert(@RequestBody Employee request) {
         Employee employee = new Employee();
 
         long id = employeeRepositoryCustom.getMaxEmpId() + 1;
@@ -47,11 +49,11 @@ public class MainController {
 
         employee.setId(id);
         employee.setEmployeeNo("E" + id);
-        employee.setName(name);
+        employee.setName(request.getName());
         employee.setHireDate(new Date());
         employeeRepository.insert(employee);
 
-        return "Inserted: " + employee;
+        return employee;
     }
 
     @ResponseBody
